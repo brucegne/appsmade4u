@@ -1,0 +1,9 @@
+<table class="w3-table w3-bordered w3-striped">
+    <tr ng-repeat="rec in myData">
+        <td>{{ rec._id }}</td>
+        <td>{{ rec.buyer }}</td>
+        <td>{{ rec.location }}</td>
+        <td>{{ rec.commodity  }}</td>
+        <td>{{ rec.basis/100 | currency }}</td>
+    </tr>
+</table>

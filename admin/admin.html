@@ -1,0 +1,23 @@
+<div class="form-group">
+	<label for="">Post ID (no spaces, use words separated with dashes)</label>
+	<input type="text" class="form-control" ng-model="data.newPostID" placeholder="how-to-make-a-blog">
+</div>
+<button type="submit" class="btn btn-primary" ng-click="createPost()">Create Post</button>
+<hr>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Post ID</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>{{ namer }}
+		<tr ng-repeat="post in posts">
+			<td>{{post.postID}}</td>
+			<td>
+				<a href="/#/edit/{{post.$id}}">Edit Post</a>
+				<button type="button" class="btn btn-sm btn-danger" ng-click="deletePost(post)">X</button>
+			</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,0 +1,31 @@
+<a href="/#/admin"><--Back</a>
+<div class="row">
+	<div class="col-sm-12 col-md-6">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th class="col-md-3">Param</th>
+					<th class="col-md-9">Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="col-md-3">Post ID</td>
+					<td class="col-md-9"><input class="form-control" type="text" ng-model="post.postID"></td>
+				</tr>
+				<tr>
+					<td class="col-md-3">Title</td>
+					<td class="col-md-9"><input class="form-control" type="text" ng-model="post.title"></td>
+				</tr>
+				<tr>
+					<td class="col-md-3">Body (accepts markdown)</td>
+					<td class="col-md-9"><textarea class="form-control" type="text" ng-model="post.body" rows="20"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-sm-12 col-md-6">
+		<h2>{{post.title}}</h2>
+		<div btf-markdown="post.body"></div>
+	</div>
+</div>
