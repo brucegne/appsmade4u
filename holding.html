@@ -1,49 +1,373 @@
-app.controller('AdminCtrl', ['$scope', 'CommonProp', '$firebaseArray',
-	function($scope, CommonProp, $firebaseArray){
-		var ref = firebase.database().ref();
-	  blogref = ref.child('blog/posts');
-		var adminPostsArr = $firebaseArray(blogref);
-		$scope.posts = adminPostsArr;
-		$scope.namer = CommonProp.getUser();
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Welcome to Firebase Mobile</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-	$scope.createPost = function(){
-		if($scope.data.newPostID){
-			var ref = firebase.database().ref();
-		    blogref = ref.child('blog/posts');
-			var adminPostsArr = $firebaseArray(blogref);
-			adminPostsArr.$add({
-				postID: $scope.data.newPostID,
-				createDate: Math.floor(Date.now()) }).then(function(newPost){
-				$scope.$state.go('edit', {postKey: newPost.key()})
-			});
-		}
-	}
-    $scope.deletePost = function(post){
-    	adminPostsArr.$remove(post)
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+      body { padding-top: 70px; }
+    </style>
+  </head>
+  <body onload="onBodyLoad()">
+    <nav class="navbar navbar-fixed-top navbar-inverse">
+     <div class="container-fluid">
+     <!-- Brand and toggle get grouped for better mobile display -->
+     <div class="navbar-header">
+     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+     <span class="sr-only">Toggle navigation</span>
+     <span class="icon-bar"></span>
+     <span class="icon-bar"></span>
+     <span class="icon-bar"></span>
+     </button>
+     <a class="navbar-brand" href="#">Heartland Advantage</a>
+     </div>
+     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+           <ul class="nav navbar-nav navbar-right">
+             <li class="">
+               <a href="#" id="signUp">Sign Up <span class="sr-only"></span></a></li>
+             <li><a href="#" id="signIn">Sign In</a></li>
+             <li><a href="#" id="logout">Logout</a></li>
+             <li><a href="wtindex.html">Other Page</a></li>
+           </ul>
+         </div>
+     </nav>
+   <div class="page-header">
+      <h1 class="text-center" id="hdrtxt">Firebase Mobile</h1>
+    </div>
+<div>
+  <button type="button" class="btn btn-block btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Open Top Modal</button><br />
+  <button type="button" class="btn btn-block btn-info btn-lg" data-toggle="modal" data-target="#myModal2">Open Bottom Modal</button>
+  <button type="button" class="btn btn-block btn-info btn-lg" id="clearAll">Clear</button>
+</div>
+<div class="btn-group btn-group-justified">
+  <a href="#" class="btn btn-primary" id="online">OnLine</a>
+  <a href="#" class="btn btn-primary" id="offline">OffLine</a>
+</div>
+    <div id="message" class="alert alert-warning" onClick="set2();">
+      Loading....
+    </div>
+    <div id="message2" class="alert alert-success"onClick="set3();">
+      Loading....
+    </div>
+    <div id="running" class="jumbotron">
+      <table border="1" id="rTable" cellspacing="2" cellpadding="4">
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </table>
+    </div>
+
+    <div id="myModal1" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Top Box Entry</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="tBox">Top Box:</label>
+              <textarea class="form-control" id="tBox" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal" id="tBtn">Set</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div id="myModal2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Bottom Box Entry</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="tBox">Bottom Box:</label>
+                <textarea class="form-control" id="bBox" rows="5"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-dismiss="modal" id="bBtn">Set</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="myModalSignUp" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="color:red;"><span class="glyphicon glyphicon-lock"></span> New User Sign Up</h4>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="form-group">
+                    <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                    <input type="email" class="form-control" id="usrnameSU" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                    <input type="password" class="form-control" id="pswSU" placeholder="Enter password">
+                  </div>
+                  <button type="submit" id="subSU" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="myModalSignIn" role="dialog">
+          <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="color:red;"><span class="glyphicon glyphicon-lock"></span> Sign In</h4>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="form-group">
+                    <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                    <input type="text" class="form-control" id="usrnameSI" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                    <input type="text" class="form-control" id="pswSI" placeholder="Enter password">
+                  </div>
+                  <button type="submit" id="subSI" class="btn btn-default btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-default btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAK2XApgMbt7DE8tXiIdn9pPMUNvZS5tCA",
+    authDomain: "socialpancakes-d1dad.firebaseapp.com",
+    databaseURL: "https://socialpancakes-d1dad.firebaseio.com",
+    storageBucket: "socialpancakes-d1dad.appspot.com",
+  };
+  firebase.initializeApp(config);
+
+  ref = firebase.database().ref();
+  ref2 = ref.child('/Starter');
+  ref3 = ref.child('/ender');
+  refB = ref.child('/blog');
+  refN = ref.child('/names');
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      $("#hdrtxt").html("Firebase Mobile<br />Signed In");
+    } else {
+      $("#hdrtxt").html("Firebase Mobile<br />Signed Out");
     }
-}])
-
-app.controller('EditCtrl', ['$scope','CommonProp', '$firebaseObject', function($scope,CommonProp, $firebaseObject){
-//	var ref = new Firebase('https://brucegne.firebaseio.com/blog/posts/');
-    var ref = firebase.database().ref();
-    blogref = ref.child('blog/posts');
-    var postObj = $firebaseObject(blogref.child($scope.$stateParams.postKey));
-    postObj.$bindTo($scope, 'post');
-	$scope.namer = CommonProp.getUser();
-}])
-
-app.controller('basisCtrl', function($scope, $http) {
-  $http.get("https://wt-9bf94d1b39dd624e4ca77a2e9249d4f0-0.sandbox.auth0-extend.com/emongo?commodity=corn").then(function (response) {
-      $scope.myData = response.data;
   });
 
+  $("#signUp").bind("click", function(evt){
+    evt.preventDefault();
+    $("#myModalSignUp").modal("show");
+  })
 
-  $http.get("http:hfpaginfo.com/summbyrselect").then(function (response) {
-      $scope.mybuyers = response.data;
+  $("#signIn").bind("click", function(evt){
+    evt.preventDefault();
+    $("#myModalSignIn").modal("show");
+  })
+
+  $("#logout").bind("click", function(evt){
+    evt.preventDefault();
+    firebase.auth().signOut().then(function() {
+      // alert("Signed out Successfully");
+      }, function(error) {
+      // alert("Error signing out");
+    });
+  })
+
+  $("#subSU").bind("click", function() {
+    uName = $("#usrnameSU").val();
+    uPass = $("#pswSU").val()
+    if(uName === '') {
+      firebase.auth().signInAnonymously().catch(function(error) {
+        // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+  // ...
+    });
+    $("#myModalSignUp").modal("hide");
+  } else {
+    firebase.auth().createUserWithEmailAndPassword(uName, uPass).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert( errorMessage);
+    });
+    $("#myModalSignUp").modal("hide");
+  };
   });
 
-    $scope.orderByMe = function(x) {
-        $scope.myOrderBy = x;
-      }
+  $("#subSI").bind("click", function() {
+    uName = $("#usrnameSI").val();
+    uPass = $("#pswSI").val()
+    if(uName === '') {
+      firebase.auth().signInAnonymously().catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
+      $("#myModalSignIn").modal("hide");
+    } else {
+      firebase.auth().signInWithEmailAndPassword(uName, uPass).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        alert( errorMessage);
+        // ...
+      });
+    $("#myModalSignIn").modal("hide");
+  };
 });
 
+  document.getElementById("clearAll").addEventListener("click", function(){
+    ref2.remove();
+    ref3.remove();
+    refB.remove();
+  });
+
+  document.getElementById("online").addEventListener("click", function(){
+    firebase.database().goOnline()
+    console.log("Going OnLine");
+  });
+
+  document.getElementById("offline").addEventListener("click", function(){
+    firebase.database().goOffline();
+    console.log("Going OffLine");
+  });
+
+  document.getElementById("tBtn").addEventListener("click", function(){
+    promptIn = document.getElementById('tBox').value;
+    document.getElementById('message').innerHTML=promptIn;
+    ref2.set(promptIn);
+    refB.push(promptIn);
+    promptIn = document.getElementById('tBox').value="";
+  });
+
+  document.getElementById("bBtn").addEventListener("click", function(){
+    promptIn = document.getElementById('bBox').value;
+    document.getElementById('message2').innerHTML=promptIn;
+    ref3.set(promptIn);
+    refB.push(promptIn);
+    promptIn = document.getElementById('bBox').value="";
+  });
+
+  function set2() {
+    var promptIn = document.getElementById('tBox').val();
+    ref2.set(promptIn);
+    refB.push(promptIn);
+  }
+
+  function set3() {
+    var promptIn = document.getElementById('bBox').val();
+    ref3.set(promptIn);
+    refB.push(promptIn);
+  }
+
+  ref2.on('value', function(snap){
+      var msg = document.getElementById('message').innerHTML=snap.val();
+  })
+    eTHML = '';
+
+  ref3.on('value', function(snap){
+      var msg = document.getElementById('message2').innerHTML=snap.val();
+  })
+    eTHML = '';
+
+    refN.orderByChild("fname").equalTo("Kellie").once("value", function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        var key = childSnapshot.key;
+        var childData = childSnapshot.val();
+//        alert(childData.fname);
+      });
+    });
+
+  refB.on("value", function(snapshot) {
+    $("#rTable").find("tr:not(:first)").remove();
+    var rtable = document.getElementById("rTable");
+    rtable.style.margin="50px";
+    snapshot.forEach(function(childSnapshot) {
+      var key = childSnapshot.key;
+      var childData = childSnapshot.val();
+      var trow = rtable.insertRow(-1);
+      var cell1 = trow.insertCell(-1);
+      var cell2 = trow.insertCell(-1);
+      cell1.innerHTML = key;
+      cell2.innerHTML = childData;
+  });
+});
+</script>
+<script>
+
+   function onBodyLoad() {
+     console.log("Entering onBodyLoad");
+     document.addEventListener("deviceready", onDeviceReady, false);
+   }
+
+   function onDeviceReady() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+   function getConnectionInfo() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+   function requestAllPaths() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+   function onFileSystemPathsReady() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+   function requestAllPaths() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+   function onFileSystemPathsReady() {
+     console.log("Cordova is ready");
+     navigator.notification.alert("Cordova is ready!");
+   }
+
+  </script>
+</body>
+</html>
