@@ -45,7 +45,7 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
 
 app.directive('myFirstDirective', function() {
   return {
-    template: "<h4>Made by Bruce EEE. Gordon</h4>"
+    template: "<h4>Made by Bruce E. Gordon</h4>"
   }
 })
 
