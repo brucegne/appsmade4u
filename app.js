@@ -40,6 +40,9 @@ app.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $url
                 url: "/basis",
                 controller: "basisCtrl",
                 templateUrl: "home/basis.html"
+            }).state("mobile", {
+                url: "/mobile",
+                templateUrl: "holding.html"
             });
 }]);
 
