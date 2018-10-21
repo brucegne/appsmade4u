@@ -1,13 +1,15 @@
+<p>Filter 1 <input type="text" ng-model="filterValue1"/></p>
+<p>Filter 2 <input type="text" ng-model="filterValue2"/></p>
 <table class="w3-table w3-bordered w3-striped">
     <tr>
         <th>Key</th>
-        <th>Buyer</th>
-        <th>Location</th>
-        <th>Commodity</th>
-        <th>Basis</th>
+        <th ng-click="myOrderBy='buyer'">Buyer</th>
+        <th ng-click="myOrderBy='location'">Location</th>
+        <th ng-click="myOrderBy='commodity'">Commodity</th>
+        <th ng-click="myOrderBy='basis'">Basis</th>
     </tr>
-    <tr ng-repeat="rec in myData">
-        <td>{{ rec._id }}</td>
+    <tr ng-repeat="rec in myData | filter:filterValue1 | filter:filterValue2 | orderBy:myOrderBy">
+        <td>{{ $index+1 }}</td>
         <td>{{ rec.buyer }}</td>
         <td>{{ rec.location }}</td>
         <td>{{ rec.commodity  }}</td>
