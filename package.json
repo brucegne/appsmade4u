@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "bower": "^1.8.4",
     "firebase-tools": "^5.1.1"
   },
   "scripts": {
