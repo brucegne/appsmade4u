@@ -36,14 +36,5 @@ app.controller('basisCtrl', function($scope, $http) {
   $http.get("http://wt-9bf94d1b39dd624e4ca77a2e9249d4f0-0.sandbox.auth0-extend.com/emongo?commodity=corn").then(function (response) {
       $scope.myData = response.data;
   });
-
-
-  $http.get("http:hfpaginfo.com/summbyrselect").then(function (response) {
-      $scope.mybuyers = response.data;
-  });
-
-    $scope.orderByMe = function(x) {
-        $scope.myOrderBy = x;
-      }
 });
 
