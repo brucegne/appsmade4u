@@ -1,4 +1,6 @@
-  // Initialize Firebase
+// See if git works here.
+
+// Initialize Firebase
   var config = {
     apiKey: "AIzaSyD4AoZnjRJZ8JxnEjZQI9zzZsk2bGIkFms",
 //    authDomain: "bgblog-f5606.firebaseapp.com",
