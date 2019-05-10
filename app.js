@@ -3,7 +3,7 @@
 // Initialize Firebase
   var config = {
     apiKey: "AIzaSyD4AoZnjRJZ8JxnEjZQI9zzZsk2bGIkFms",
-//    authDomain: "bgblog-f5606.firebaseapp.com",
+    authDomain: "bgblog-f5606.firebaseapp.com",
     databaseURL: "https://bgblog-f5606.firebaseio.com",
     storageBucket: "bgblog-f5606.appspot.com",
   };
