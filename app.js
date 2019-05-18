@@ -1,4 +1,4 @@
-// See if git works here.
+
 
 // Initialize Firebase
   var config = {
