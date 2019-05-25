@@ -1,37 +1,5 @@
 {
   "projects": {
-    "default": "bgblog-f5606"
+    "default": " bgblog-f5606"
   }
 }
-
-{
-  "database": {
-    "rules": "database.rules.json"
-  },
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
-  "storage": {
-    "rules": "storage.rules"
-  }
-}
-
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
-    }
-  }
-}
-
