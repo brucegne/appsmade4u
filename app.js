@@ -1,5 +1,3 @@
-
-
 // Initialize Firebase
   var config = {
     apiKey: "AIzaSyD4AoZnjRJZ8JxnEjZQI9zzZsk2bGIkFms",
